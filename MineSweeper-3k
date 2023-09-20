@@ -1,0 +1,99 @@
+10 dimm(6,5),d(6,5),qx(25),qy(25),c(10)
+15 c(1)=0:c(2)=0 :c(3)=4:c(4)=2:c(5)=2:c(6)=2:c(7)=2:c(8)=2
+20 dx=1:dy=1:dm=7680:cm=38400-dm:poke36879,1*16+1+8
+29 print"{clear}{reverse on}{red}{space*22}{reverse off}";
+30 print"{reverse on}{space*3}retro ramblings{space*8}mine{space*2}sweeper{space*5}{reverse off}";
+31 print"{reverse on}{space*22}{reverse off}"
+32 print"{down}{green}youtube.com/c/retroramblings"
+33 print"{down}{purple}flag all the mines{space*4}without hitting any"
+35 print"{down}{blue}keys"
+40 print"{dark gray}w-up a-left s-down{space*4}d-right"
+45 print"{down}space-flag mine{space*7}return-check for mine"
+50 ir=5:ic=6
+70 input"{down}mines (min 5)";im
+75 if im<5orim>=ir*icthenprint"too many":goto70
+80 forc=1toim
+85 x=int(rnd(1)*ic)+1:y=int(rnd(1)*ir)+1
+90 ifm(x,y)=1then85
+95 m(x,y)=1:next
+100 for x=1toic:fory=1toir:d(x,y)=-1:next:next
+110 print"{clear}":gosub150:gosub155
+120 goto 200
+150 print"{home}{purple}mines"im"{space*2}flags"dc:return
+155 print"{blue}{cm a}"left$("{sh asterisk}{cm r}{sh asterisk}{cm r}{sh asterisk}{cm r}{sh asterisk}{cm r}{sh asterisk}{cm r}{sh asterisk}{cm r}{sh asterisk}{cm r}{sh asterisk}{cm r}{sh asterisk}{cm r}{sh asterisk}{cm r}{sh asterisk}{cm r}{sh asterisk}{cm r}{sh asterisk}{cm r}{sh asterisk}{cm r}{sh asterisk}{cm r}{sh asterisk}{cm r}{sh asterisk}{cm r}{sh asterisk}{cm r}",ic*2-2)"{sh asterisk}{cm s}"
+160 fory=1toir
+165 forx=1toic
+170 print"{blue}{sh -}"mid$("{black}{cm +}{black}{cm +}{black} {black}1{black}2{purple}3{red}4{red}5{red}6{red}7{red}8{cyan}W{red}Q{red}V",d(x,y)*2+5,2);
+175 next:print"{blue}{sh -}"
+180 ify<irthen print"{blue}{cm q}"left$("{sh asterisk}{sh +}{sh asterisk}{sh +}{sh asterisk}{sh +}{sh asterisk}{sh +}{sh asterisk}{sh +}{sh asterisk}{sh +}{sh asterisk}{sh +}{sh asterisk}{sh +}{sh asterisk}{sh +}{sh asterisk}{sh +}{sh asterisk}{sh +}{sh asterisk}{sh +}{sh asterisk}{sh +}{sh asterisk}{sh +}{sh asterisk}{sh +}{sh asterisk}{sh +}{sh asterisk}{sh +}{sh asterisk}{sh +}",ic*2-2)"{sh asterisk}{cm w}"
+190 next
+195 print"{blue}{cm z}"left$("{sh asterisk}{cm e}{sh asterisk}{cm e}{sh asterisk}{cm e}{sh asterisk}{cm e}{sh asterisk}{cm e}{sh asterisk}{cm e}{sh asterisk}{cm e}{sh asterisk}{cm e}{sh asterisk}{cm e}{sh asterisk}{cm e}{sh asterisk}{cm e}{sh asterisk}{cm e}{sh asterisk}{cm e}{sh asterisk}{cm e}{sh asterisk}{cm e}{sh asterisk}{cm e}{sh asterisk}{cm e}{sh asterisk}{cm e}",ic*2-2)"{sh asterisk}{cm x}":return
+200 rem
+205 ml=dm+dx*2-1+dy*44
+210 p=peek(ml):getg$
+214 if int(timer/15)/2=int(timer/30)then220
+215 ifp>128thenpokeml,p-128
+216 goto221
+220 ifp<128thenpokeml,p+128
+221 ifg$="" then210
+223 p=peek(ml):ifp>128thenpokeml,p-128
+225 ifg$=" "andd(dx,dy)=-1thend(dx,dy)=9:pokeml,87:pokeml+cm,3:dc=dc+1:goto500
+227 ifg$=" "andd(dx,dy)=9thend(dx,dy)=-1:pokeml,102:pokeml+cm,0:dc=dc-1
+230 ifg$=" " then gosub 150:printleft$("{down*22}",ir*2)
+235 ifg$=chr$(13)andd(dx,dy)<>9thengosub300
+240 ifg$="s"thendy=dy+1
+245 ifg$="w"thendy=dy-1
+250 if dy<1thendy=1
+251 if dy>irthendy=ir
+260 ifg$="d"thendx=dx+1
+261 if dy>irthendy=ir
+265 ifg$="a"thendx=dx-1
+270 if dx<1thendx=1
+271 if dx>icthendx=ic
+290 goto 200
+300 if m(dx,dy)=1then400
+302 if d(dx,dy)=0thenreturn
+310 qc=0:qt=0
+325 qx(qt)=dx:qy(qt)=dy:qt=qt+1
+330 gosub350:d(dx,dy)=bc
+331 ifbc=0then334
+332 d(dx,dy)=bc:pokeml,48+bc:pokeml+cm,c(bc):return
+334 print"{blue}thinking please wait{up}"
+335 gosub350
+340 qc=qc+1:ifqc<=qtthen335
+345 gosub150:gosub155:print"{space*21}{up}":return
+350 bc=0:remprint"{home}{right*22}"str$(qx(qc))str$(qy(qc))str$(qt)
+354 fory=qy(qc)-1toqy(qc)+1
+355 forx=qx(qc)-1toqx(qc)+1
+356 ifx<1orx>icthen370
+357 ify<1ory>irthen370
+358 if x=qx(qc)andy=qy(qc)then370
+360 bc=bc+m(x,y)
+370 next:next
+375 ifm(qx(qc),qy(qc))=0thend(qx(qc),qy(qc))=bc
+377 ifbc>0thenreturn
+379 forx=qx(qc)-1toqx(qc)+1
+380 fory=qy(qc)-1toqy(qc)+1
+381 ifx=qx(qc)andy=qy(qc)then390
+382 ifx<1orx>icthen390
+383 ify<1ory>irthen390
+384 ifd(x,y)<>-1then390
+387 qx(qt)=x:qy(qt)=y:qt=qt+1:d(x,y)=-2
+390 next:next
+395 return
+400 fory=1toir
+410 forx=1toic
+420 ifm(x,y)=1thend(x,y)=10
+425 ifm(x,y)=0andd(x,y)=9thend(x,y)=11
+430 next:next
+435 gosub 150:gosub155
+440 print"{red}bang!! r to restart";
+450 get g$:ifg$<>"r"then450
+460 run
+500 if dc<imthen230
+510 fory=1toir
+512 forx=1toic
+520 ifm(x,y)=1andd(x,y)<>9then230
+530 next:next
+540 gosub 150:printleft$("{down*22}",ir*2)
+550 print"{green}you win r to restart":goto 450
